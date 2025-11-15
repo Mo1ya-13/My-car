@@ -1,43 +1,520 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>康文昌的在线HTML 教学小工具</title>
-    <style>  
-      body {
-        margin: 0;
-      }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆点检记录系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            border-right: 1px solid #eee;
+        }
+        
+        .records-section {
+            flex: 2;
+            min-width: 500px;
+            padding: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-reset {
+            background: #e74c3c;
+            margin-left: 10px;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-edit, .btn-delete {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+            border: none;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state img {
+            max-width: 200px;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-section input, .filter-section select {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .form-section, .records-section {
+                flex: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div style='
-    background-color:#f1f1f1;
-    text-align:center;
-    padding:40px;
-    '>
-      <img src='https://th.bing.com/th/id/OIP.dxIU_foa6wrBOHK1ktDkAAHaFj?rs=1&pid=ImgDetMain'alt='zyo'width='80'height='80'
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>车辆点检记录系统</h1>
+            <p>记录并管理您的车辆点检历史，确保行车安全</p>
+        </header>
+        
+        <div class="main-content">
+            <section class="form-section">
+                <h2 class="section-title">添加点检记录</h2>
+                <form id="inspection-form">
+                    <div class="form-group">
+                        <label for="date">点检日期</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicle">车辆信息</label>
+                        <input type="text" id="vehicle" placeholder="例如：丰田卡罗拉 车牌号: 京A12345" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type">点检类型</label>
+                        <select id="type" required>
+                            <option value="">请选择点检类型</option>
+                            <option value="日常检查">日常检查</option>
+                            <option value="定期保养">定期保养</option>
+                            <option value="故障维修">故障维修</option>
+                            <option value="年检">年检</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="items">点检项目</label>
+                        <input type="text" id="items" placeholder="例如：更换机油、检查刹车片" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">点检状态</label>
+                        <select id="status" required>
+                            <option value="">请选择状态</option>
+                            <option value="正常">正常</option>
+                            <option value="需注意">需注意</option>
+                            <option value="需维修">需维修</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">备注</label>
+                        <textarea id="notes" placeholder="可填写详细点检情况、维修建议等"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn">保存点检记录</button>
+                        <button type="reset" class="btn btn-reset">重置表单</button>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="records-section">
+                <h2 class="section-title">点检历史记录</h2>
+                
+                <div class="filter-section">
+                    <input type="text" id="search-vehicle" placeholder="搜索车辆...">
+                    <select id="filter-type">
+                        <option value="">所有类型</option>
+                        <option value="日常检查">日常检查</option>
+                        <option value="定期保养">定期保养</option>
+                        <option value="故障维修">故障维修</option>
+                        <option value="年检">年检</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <select id="filter-status">
+                        <option value="">所有状态</option>
+                        <option value="正常">正常</option>
+                        <option value="需注意">需注意</option>
+                        <option value="需维修">需维修</option>
+                    </select>
+                </div>
+                
+                <div id="records-container">
+                    <table id="records-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>车辆</th>
+                                <th>类型</th>
+                                <th>项目</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-body">
+                            <!-- 记录将通过JavaScript动态添加 -->
+                        </tbody>
+                    </table>
+                    <div id="empty-state" class="empty-state">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xOS41IDE0LjVWNWEyLjUgMi41IDAgMDAtMi41LTIuNUg3QTIuNSAyLjUgMCAwMDQuNSA1djkuNUgyLjVhLjUuNSAwIDAwLS41LjV2NGExIDEgMCAwMDEgMWgxOGExIDEgMCAwMDEtMXYtNGEuNS41IDAgMDAtLjUtLjVoLTJ6TTcgMTkuNWgtM3YtMy41aDN2My41em0xMy41IDBoLTEzdi0yLjVoMTN2Mi41eiIgZmlsbD0iIzc0ODA5MCIvPjwvc3ZnPg==" alt="暂无记录">
+                        <h3>暂无点检记录</h3>
+                        <p>请添加您的第一条点检记录</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>车辆点检记录系统 &copy; 2023 - 确保行车安全，定期检查车辆</p>
+        </footer>
     </div>
-    <div style="
-    max-width:700px;
-    margin: 30px auto;
-    padding:15px;
-    line-height:1.7;
-    ">
-      <p>详细参数</p>
-      <p>型式zn6</p>
-      <p>ホイールベース　2570mm</p>
-      <p>全長ｘ全幅ｘ全高　4240x1775x1320</p>
-      <p>車両重量　1250kg</p>
-    </div>
-    <div style='
-    background-color:#f1f1f1;
-    text-align:center;
-    padding:40px;
-    font-size:12px
-    '>
-    <p>我的网站</p>
-    <a href='https://www.bilibili.com/video/BV1hY411j7UM?vd_source=0052bdd9160649ed28851fcf838b6af1&spm_id_from=333.788.videopod.sections'>友情链接</a>
-    </div>
-  </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const form = document.getElementById('inspection-form');
+            const recordsBody = document.getElementById('records-body');
+            const emptyState = document.getElementById('empty-state');
+            const searchVehicle = document.getElementById('search-vehicle');
+            const filterType = document.getElementById('filter-type');
+            const filterStatus = document.getElementById('filter-status');
+            
+            // 加载保存的记录
+            loadRecords();
+            
+            // 表单提交事件
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 获取表单数据
+                const date = document.getElementById('date').value;
+                const vehicle = document.getElementById('vehicle').value;
+                const type = document.getElementById('type').value;
+                const items = document.getElementById('items').value;
+                const status = document.getElementById('status').value;
+                const notes = document.getElementById('notes').value;
+                
+                // 创建记录对象
+                const record = {
+                    id: Date.now(), // 使用时间戳作为唯一ID
+                    date,
+                    vehicle,
+                    type,
+                    items,
+                    status,
+                    notes
+                };
+                
+                // 保存记录
+                saveRecord(record);
+                
+                // 重新加载记录
+                loadRecords();
+                
+                // 重置表单
+                form.reset();
+                
+                // 显示成功消息
+                alert('点检记录已保存！');
+            });
+            
+            // 搜索和过滤事件
+            searchVehicle.addEventListener('input', loadRecords);
+            filterType.addEventListener('change', loadRecords);
+            filterStatus.addEventListener('change', loadRecords);
+            
+            // 保存记录到本地存储
+            function saveRecord(record) {
+                let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
+                records.push(record);
+                localStorage.setItem('vehicleRecords', JSON.stringify(records));
+            }
+            
+            // 从本地存储加载记录
+            function loadRecords() {
+                const searchTerm = searchVehicle.value.toLowerCase();
+                const typeFilter = filterType.value;
+                const statusFilter = filterStatus.value;
+                
+                let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
+                
+                // 应用过滤
+                records = records.filter(record => {
+                    const matchesSearch = record.vehicle.toLowerCase().includes(searchTerm);
+                    const matchesType = !typeFilter || record.type === typeFilter;
+                    const matchesStatus = !statusFilter || record.status === statusFilter;
+                    
+                    return matchesSearch && matchesType && matchesStatus;
+                });
+                
+                // 按日期排序（最新的在前面）
+                records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // 清空表格
+                recordsBody.innerHTML = '';
+                
+                // 显示/隐藏空状态
+                if (records.length === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+                    
+                    // 添加记录到表格
+                    records.forEach(record => {
+                        const row = document.createElement('tr');
+                        
+                        // 根据状态设置样式类
+                        let statusClass = '';
+                        if (record.status === '正常') statusClass = 'status-normal';
+                        else if (record.status === '需注意') statusClass = 'status-warning';
+                        else if (record.status === '需维修') statusClass = 'status-danger';
+                        
+                        row.innerHTML = `
+                            <td>${formatDate(record.date)}</td>
+                            <td>${record.vehicle}</td>
+                            <td>${record.type}</td>
+                            <td>${record.items}</td>
+                            <td><span class="status-badge ${statusClass}">${record.status}</span></td>
+                            <td class="actions">
+                                <button class="btn-edit" onclick="viewRecord(${record.id})">查看</button>
+                                <button class="btn-delete" onclick="deleteRecord(${record.id})">删除</button>
+                            </td>
+                        `;
+                        
+                        recordsBody.appendChild(row);
+                    });
+                }
+            }
+            
+            // 格式化日期显示
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                return new Date(dateString).toLocaleDateString('zh-CN', options);
+            }
+            
+            // 查看记录详情
+            window.viewRecord = function(id) {
+                const records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
+                const record = records.find(r => r.id === id);
+                
+                if (record) {
+                    alert(
+                        `点检详情:\n\n` +
+                        `日期: ${formatDate(record.date)}\n` +
+                        `车辆: ${record.vehicle}\n` +
+                        `类型: ${record.type}\n` +
+                        `项目: ${record.items}\n` +
+                        `状态: ${record.status}\n` +
+                        `备注: ${record.notes || '无'}`
+                    );
+                }
+            };
+            
+            // 删除记录
+            window.deleteRecord = function(id) {
+                if (confirm('确定要删除这条点检记录吗？')) {
+                    let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
+                    records = records.filter(record => record.id !== id);
+                    localStorage.setItem('vehicleRecords', JSON.stringify(records));
+                    loadRecords();
+                }
+            };
+        });
+    </script>
+</body>
 </html>
