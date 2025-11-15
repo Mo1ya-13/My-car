@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>车辆点检记录系统</title>
+    <title>我的车辆点检记录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,36 +14,59 @@
         }
         
         body {
-            background-color: #f5f7fa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
             color: #333;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         
         header {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+            background: linear-gradient(135deg, #3498db, #2c3e50);
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
         }
         
         header h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             margin-bottom: 10px;
+            position: relative;
         }
         
         header p {
             opacity: 0.9;
             font-size: 1.1rem;
+            position: relative;
+        }
+        
+        .car-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            color: #f39c12;
         }
         
         .main-content {
@@ -53,9 +77,12 @@
         
         .form-section {
             flex: 1;
-            min-width: 300px;
+            min-width: 320px;
             padding: 25px;
             border-right: 1px solid #eee;
+            background: #f9fbfd;
+            border-radius: 12px;
+            margin: 10px;
         }
         
         .records-section {
@@ -70,6 +97,13 @@
             color: #2c3e50;
             padding-bottom: 10px;
             border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #3498db;
         }
         
         .form-group {
@@ -113,6 +147,13 @@
             font-size: 1rem;
             font-weight: 600;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
         }
         
         .btn:hover {
@@ -135,6 +176,8 @@
             border-collapse: collapse;
             margin-top: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         th, td {
@@ -153,26 +196,9 @@
             background-color: #f8f9fa;
         }
         
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .mileage {
             font-weight: 600;
-        }
-        
-        .status-normal {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-warning {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-danger {
-            background-color: #f8d7da;
-            color: #721c24;
+            color: #2c3e50;
         }
         
         .actions {
@@ -185,18 +211,17 @@
             font-size: 0.85rem;
             border-radius: 4px;
             cursor: pointer;
+            border: none;
         }
         
         .btn-edit {
             background: #f39c12;
             color: white;
-            border: none;
         }
         
         .btn-delete {
             background: #e74c3c;
             color: white;
-            border: none;
         }
         
         .empty-state {
@@ -205,10 +230,10 @@
             color: #7f8c8d;
         }
         
-        .empty-state img {
-            max-width: 200px;
+        .empty-state i {
+            font-size: 4rem;
             margin-bottom: 20px;
-            opacity: 0.6;
+            color: #bdc3c7;
         }
         
         .filter-section {
@@ -231,6 +256,36 @@
             border-top: 1px solid #eee;
         }
         
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            border-top: 4px solid #3498db;
+        }
+        
+        .stat-card h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
         @media (max-width: 768px) {
             .form-section, .records-section {
                 flex: 100%;
@@ -250,71 +305,94 @@
             .actions {
                 flex-direction: column;
             }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn-reset {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>车辆点检记录系统</h1>
-            <p>记录并管理您的车辆点检历史，确保行车安全</p>
+            <div class="car-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <h1>我的车辆点检记录</h1>
+            <p>记录车辆点检与保养，轻松管理爱车</p>
         </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="total-records">0</h3>
+                <p>点检记录总数</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="last-mileage">0</h3>
+                <p>当前公里数</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="next-service">-</h3>
+                <p>下次保养提醒</p>
+            </div>
+        </div>
         
         <div class="main-content">
             <section class="form-section">
-                <h2 class="section-title">添加点检记录</h2>
+                <h2 class="section-title"><i class="fas fa-plus-circle"></i>添加点检记录</h2>
                 <form id="inspection-form">
                     <div class="form-group">
-                        <label for="date">点检日期</label>
+                        <label for="date"><i class="far fa-calendar-alt"></i> 点检日期</label>
                         <input type="date" id="date" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="vehicle">车辆信息</label>
-                        <input type="text" id="vehicle" placeholder="例如：丰田卡罗拉 车牌号: 京A12345" required>
+                        <label for="vehicle"><i class="fas fa-car-side"></i> 车辆信息</label>
+                        <input type="text" id="vehicle" placeholder="例如：我的丰田卡罗拉" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="type">点检类型</label>
+                        <label for="mileage"><i class="fas fa-tachometer-alt"></i> 当前公里数</label>
+                        <input type="number" id="mileage" placeholder="例如：85600" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type"><i class="fas fa-tools"></i> 点检类型</label>
                         <select id="type" required>
                             <option value="">请选择点检类型</option>
                             <option value="日常检查">日常检查</option>
                             <option value="定期保养">定期保养</option>
-                            <option value="故障维修">故障维修</option>
-                            <option value="年检">年检</option>
+                            <option value="更换机油">更换机油</option>
+                            <option value="轮胎检查">轮胎检查</option>
+                            <option value="刹车检查">刹车检查</option>
                             <option value="其他">其他</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="items">点检项目</label>
+                        <label for="items"><i class="fas fa-clipboard-list"></i> 点检项目</label>
                         <input type="text" id="items" placeholder="例如：更换机油、检查刹车片" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="status">点检状态</label>
-                        <select id="status" required>
-                            <option value="">请选择状态</option>
-                            <option value="正常">正常</option>
-                            <option value="需注意">需注意</option>
-                            <option value="需维修">需维修</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="notes">备注</label>
+                        <label for="notes"><i class="far fa-sticky-note"></i> 备注</label>
                         <textarea id="notes" placeholder="可填写详细点检情况、维修建议等"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <button type="submit" class="btn">保存点检记录</button>
-                        <button type="reset" class="btn btn-reset">重置表单</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> 保存点检记录</button>
+                        <button type="reset" class="btn btn-reset"><i class="fas fa-redo"></i> 重置表单</button>
                     </div>
                 </form>
             </section>
             
             <section class="records-section">
-                <h2 class="section-title">点检历史记录</h2>
+                <h2 class="section-title"><i class="fas fa-history"></i>点检历史记录</h2>
                 
                 <div class="filter-section">
                     <input type="text" id="search-vehicle" placeholder="搜索车辆...">
@@ -322,15 +400,10 @@
                         <option value="">所有类型</option>
                         <option value="日常检查">日常检查</option>
                         <option value="定期保养">定期保养</option>
-                        <option value="故障维修">故障维修</option>
-                        <option value="年检">年检</option>
+                        <option value="更换机油">更换机油</option>
+                        <option value="轮胎检查">轮胎检查</option>
+                        <option value="刹车检查">刹车检查</option>
                         <option value="其他">其他</option>
-                    </select>
-                    <select id="filter-status">
-                        <option value="">所有状态</option>
-                        <option value="正常">正常</option>
-                        <option value="需注意">需注意</option>
-                        <option value="需维修">需维修</option>
                     </select>
                 </div>
                 
@@ -341,8 +414,8 @@
                                 <th>日期</th>
                                 <th>车辆</th>
                                 <th>类型</th>
+                                <th>公里数</th>
                                 <th>项目</th>
-                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -351,7 +424,7 @@
                         </tbody>
                     </table>
                     <div id="empty-state" class="empty-state">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xOS41IDE0LjVWNWEyLjUgMi41IDAgMDAtMi41LTIuNUg3QTIuNSAyLjUgMCAwMDQuNSA1djkuNUgyLjVhLjUuNSAwIDAwLS41LjV2NGExIDEgMCAwMDEgMWgxOGExIDEgMCAwMDEtMXYtNGEuNS41IDAgMDAtLjUtLjVoLTJ6TTcgMTkuNWgtM3YtMy41aDN2My41em0xMy41IDBoLTEzdi0yLjVoMTN2Mi41eiIgZmlsbD0iIzc0ODA5MCIvPjwvc3ZnPg==" alt="暂无记录">
+                        <i class="fas fa-clipboard-list"></i>
                         <h3>暂无点检记录</h3>
                         <p>请添加您的第一条点检记录</p>
                     </div>
@@ -360,7 +433,7 @@
         </div>
         
         <footer>
-            <p>车辆点检记录系统 &copy; 2023 - 确保行车安全，定期检查车辆</p>
+            <p>我的车辆点检记录 &copy; 2023 - 轻松管理，安全驾驶</p>
         </footer>
     </div>
 
@@ -372,7 +445,12 @@
             const emptyState = document.getElementById('empty-state');
             const searchVehicle = document.getElementById('search-vehicle');
             const filterType = document.getElementById('filter-type');
-            const filterStatus = document.getElementById('filter-status');
+            const totalRecords = document.getElementById('total-records');
+            const lastMileage = document.getElementById('last-mileage');
+            const nextService = document.getElementById('next-service');
+            
+            // 设置默认日期为今天
+            document.getElementById('date').valueAsDate = new Date();
             
             // 加载保存的记录
             loadRecords();
@@ -384,9 +462,9 @@
                 // 获取表单数据
                 const date = document.getElementById('date').value;
                 const vehicle = document.getElementById('vehicle').value;
+                const mileage = document.getElementById('mileage').value;
                 const type = document.getElementById('type').value;
                 const items = document.getElementById('items').value;
-                const status = document.getElementById('status').value;
                 const notes = document.getElementById('notes').value;
                 
                 // 创建记录对象
@@ -394,9 +472,9 @@
                     id: Date.now(), // 使用时间戳作为唯一ID
                     date,
                     vehicle,
+                    mileage,
                     type,
                     items,
-                    status,
                     notes
                 };
                 
@@ -408,6 +486,7 @@
                 
                 // 重置表单
                 form.reset();
+                document.getElementById('date').valueAsDate = new Date();
                 
                 // 显示成功消息
                 alert('点检记录已保存！');
@@ -416,7 +495,6 @@
             // 搜索和过滤事件
             searchVehicle.addEventListener('input', loadRecords);
             filterType.addEventListener('change', loadRecords);
-            filterStatus.addEventListener('change', loadRecords);
             
             // 保存记录到本地存储
             function saveRecord(record) {
@@ -429,7 +507,6 @@
             function loadRecords() {
                 const searchTerm = searchVehicle.value.toLowerCase();
                 const typeFilter = filterType.value;
-                const statusFilter = filterStatus.value;
                 
                 let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
                 
@@ -437,13 +514,15 @@
                 records = records.filter(record => {
                     const matchesSearch = record.vehicle.toLowerCase().includes(searchTerm);
                     const matchesType = !typeFilter || record.type === typeFilter;
-                    const matchesStatus = !statusFilter || record.status === statusFilter;
                     
-                    return matchesSearch && matchesType && matchesStatus;
+                    return matchesSearch && matchesType;
                 });
                 
                 // 按日期排序（最新的在前面）
                 records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // 更新统计数据
+                updateStats(records);
                 
                 // 清空表格
                 recordsBody.innerHTML = '';
@@ -458,26 +537,41 @@
                     records.forEach(record => {
                         const row = document.createElement('tr');
                         
-                        // 根据状态设置样式类
-                        let statusClass = '';
-                        if (record.status === '正常') statusClass = 'status-normal';
-                        else if (record.status === '需注意') statusClass = 'status-warning';
-                        else if (record.status === '需维修') statusClass = 'status-danger';
-                        
                         row.innerHTML = `
                             <td>${formatDate(record.date)}</td>
                             <td>${record.vehicle}</td>
                             <td>${record.type}</td>
+                            <td class="mileage">${record.mileage} 公里</td>
                             <td>${record.items}</td>
-                            <td><span class="status-badge ${statusClass}">${record.status}</span></td>
                             <td class="actions">
-                                <button class="btn-edit" onclick="viewRecord(${record.id})">查看</button>
-                                <button class="btn-delete" onclick="deleteRecord(${record.id})">删除</button>
+                                <button class="btn-edit" onclick="viewRecord(${record.id})"><i class="fas fa-eye"></i> 查看</button>
+                                <button class="btn-delete" onclick="deleteRecord(${record.id})"><i class="fas fa-trash"></i> 删除</button>
                             </td>
                         `;
                         
                         recordsBody.appendChild(row);
                     });
+                }
+            }
+            
+            // 更新统计信息
+            function updateStats(records) {
+                // 总记录数
+                totalRecords.textContent = records.length;
+                
+                // 最新公里数
+                if (records.length > 0) {
+                    const latestRecord = records.reduce((prev, current) => {
+                        return (prev.mileage > current.mileage) ? prev : current;
+                    });
+                    lastMileage.textContent = latestRecord.mileage + ' 公里';
+                    
+                    // 下次保养提醒（假设每5000公里需要保养）
+                    const nextServiceKm = parseInt(latestRecord.mileage) + 5000;
+                    nextService.textContent = nextServiceKm + ' 公里';
+                } else {
+                    lastMileage.textContent = '0 公里';
+                    nextService.textContent = '-';
                 }
             }
             
@@ -497,9 +591,9 @@
                         `点检详情:\n\n` +
                         `日期: ${formatDate(record.date)}\n` +
                         `车辆: ${record.vehicle}\n` +
+                        `公里数: ${record.mileage} 公里\n` +
                         `类型: ${record.type}\n` +
                         `项目: ${record.items}\n` +
-                        `状态: ${record.status}\n` +
                         `备注: ${record.notes || '无'}`
                     );
                 }
