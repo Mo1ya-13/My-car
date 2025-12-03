@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的车辆点检记录</title>
+    <title>マイカー点検記録</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
         }
         
         body {
@@ -67,6 +67,95 @@
             margin-bottom: 15px;
             position: relative;
             color: #f39c12;
+        }
+        
+        .vehicle-info-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .vehicle-info-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .vehicle-info-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .vehicle-info-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .vehicle-detail {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .vehicle-detail label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .vehicle-detail input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .fluid-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .fluid-detail {
+            margin-bottom: 10px;
+        }
+        
+        .fluid-detail:last-child {
+            margin-bottom: 0;
+        }
+        
+        .btn-edit-vehicle {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-edit-vehicle i {
+            margin-right: 8px;
+        }
+        
+        .btn-edit-vehicle:hover {
+            background: #2980b9;
         }
         
         .main-content {
@@ -137,6 +226,43 @@
             resize: vertical;
         }
         
+        .image-upload-container {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .image-upload-container:hover {
+            background: #e8f4fd;
+        }
+        
+        .image-upload-container i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .image-upload-container p {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
         .btn {
             background: #3498db;
             color: white;
@@ -199,6 +325,22 @@
         .mileage {
             font-weight: 600;
             color: #2c3e50;
+        }
+        
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .thumbnail:hover {
+            transform: scale(1.8);
+            z-index: 10;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .actions {
@@ -286,6 +428,40 @@
             font-size: 0.9rem;
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #f39c12;
+        }
+        
         @media (max-width: 768px) {
             .form-section, .records-section {
                 flex: 100%;
@@ -314,6 +490,14 @@
             .btn-reset {
                 margin-left: 0;
             }
+            
+            .vehicle-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .fluid-details {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -323,87 +507,146 @@
             <div class="car-icon">
                 <i class="fas fa-car"></i>
             </div>
-            <h1>我的车辆点检记录</h1>
-            <p>记录车辆点检与保养，轻松管理爱车</p>
+            <h1>マイカー点検記録</h1>
+            <p>車両の点検とメンテナンスを記録し、愛車を簡単に管理</p>
         </header>
+        
+        <section class="vehicle-info-section">
+            <div class="vehicle-info-content">
+                <h2 class="vehicle-info-title"><i class="fas fa-car-side"></i> 車両基本情報</h2>
+                <div class="vehicle-details">
+                    <div class="vehicle-detail">
+                        <label for="car-model">車種</label>
+                        <input type="text" id="car-model" placeholder="例：トヨタ プリウス">
+                    </div>
+                    <div class="vehicle-detail">
+                        <label for="car-year">年式</label>
+                        <input type="text" id="car-year" placeholder="例：2018年">
+                    </div>
+                    <div class="vehicle-detail">
+                        <label for="tire-size-front">前輪タイヤサイズ</label>
+                        <input type="text" id="tire-size-front" placeholder="例：195/65R15">
+                    </div>
+                    <div class="vehicle-detail">
+                        <label for="tire-size-rear">後輪タイヤサイズ</label>
+                        <input type="text" id="tire-size-rear" placeholder="例：195/65R15（前後同じ場合は空欄）">
+                    </div>
+                </div>
+                
+                <div class="vehicle-details" style="margin-top: 15px;">
+                    <div class="vehicle-detail">
+                        <label>油脂類情報</label>
+                        <div class="fluid-details">
+                            <div class="fluid-detail">
+                                <label for="engine-oil">エンジンオイル</label>
+                                <input type="text" id="engine-oil" placeholder="例：0W-20 / 4.2L">
+                            </div>
+                            <div class="fluid-detail">
+                                <label for="brake-fluid">ブレーキフルード</label>
+                                <input type="text" id="brake-fluid" placeholder="例：DOT4 / 0.5L">
+                            </div>
+                            <div class="fluid-detail">
+                                <label for="gear-oil">ギヤーオイル</label>
+                                <input type="text" id="gear-oil" placeholder="例：75W-90 / 2.1L">
+                            </div>
+                            <div class="fluid-detail">
+                                <label for="clutch-fluid">クラッチフルード</label>
+                                <input type="text" id="clutch-fluid" placeholder="例：DOT4 / 0.3L">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-edit-vehicle" id="save-vehicle-info"><i class="fas fa-save"></i> 車両情報を保存</button>
+            </div>
+        </section>
         
         <div class="stats">
             <div class="stat-card">
                 <h3 id="total-records">0</h3>
-                <p>点检记录总数</p>
+                <p>点検記録数</p>
             </div>
             <div class="stat-card">
                 <h3 id="last-mileage">0</h3>
-                <p>当前公里数</p>
+                <p>現在の走行距離</p>
             </div>
             <div class="stat-card">
                 <h3 id="next-service">-</h3>
-                <p>下次保养提醒</p>
+                <p>次回点検時期</p>
             </div>
         </div>
         
         <div class="main-content">
             <section class="form-section">
-                <h2 class="section-title"><i class="fas fa-plus-circle"></i>添加点检记录</h2>
+                <h2 class="section-title"><i class="fas fa-plus-circle"></i> 点検記録を追加</h2>
                 <form id="inspection-form">
                     <div class="form-group">
-                        <label for="date"><i class="far fa-calendar-alt"></i> 点检日期</label>
+                        <label for="date"><i class="far fa-calendar-alt"></i> 点検日</label>
                         <input type="date" id="date" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="vehicle"><i class="fas fa-car-side"></i> 车辆信息</label>
-                        <input type="text" id="vehicle" placeholder="例如：我的丰田卡罗拉" required>
+                        <label for="mileage"><i class="fas fa-tachometer-alt"></i> 走行距離 (km)</label>
+                        <input type="number" id="mileage" placeholder="例：85600" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="mileage"><i class="fas fa-tachometer-alt"></i> 当前公里数</label>
-                        <input type="number" id="mileage" placeholder="例如：85600" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="type"><i class="fas fa-tools"></i> 点检类型</label>
+                        <label for="type"><i class="fas fa-tools"></i> 点検種類</label>
                         <select id="type" required>
-                            <option value="">请选择点检类型</option>
-                            <option value="日常检查">日常检查</option>
-                            <option value="定期保养">定期保养</option>
-                            <option value="更换机油">更换机油</option>
-                            <option value="轮胎检查">轮胎检查</option>
-                            <option value="刹车检查">刹车检查</option>
-                            <option value="其他">其他</option>
+                            <option value="">点検種類を選択</option>
+                            <option value="日常点検">日常点検</option>
+                            <option value="定期点検">定期点検</option>
+                            <option value="オイル交換">オイル交換</option>
+                            <option value="タイヤ交換">タイヤ交換</option>
+                            <option value="ブレーキ点検">ブレーキ点検</option>
+                            <option value="その他">その他</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="items"><i class="fas fa-clipboard-list"></i> 点检项目</label>
-                        <input type="text" id="items" placeholder="例如：更换机油、检查刹车片" required>
+                        <label for="items"><i class="fas fa-clipboard-list"></i> 点検項目</label>
+                        <input type="text" id="items" placeholder="例：オイル交換、ブレーキパッド点検" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="notes"><i class="far fa-sticky-note"></i> 备注</label>
-                        <textarea id="notes" placeholder="可填写详细点检情况、维修建议等"></textarea>
+                        <label for="notes"><i class="far fa-sticky-note"></i> 備考</label>
+                        <textarea id="notes" placeholder="詳細な点検状況、修理提案などを記入"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <button type="submit" class="btn"><i class="fas fa-save"></i> 保存点检记录</button>
-                        <button type="reset" class="btn btn-reset"><i class="fas fa-redo"></i> 重置表单</button>
+                        <label><i class="fas fa-camera"></i> 写真を追加</label>
+                        <div class="image-upload-container" id="image-upload-area">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>写真をクリックまたはドラッグ＆ドロップ</p>
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                            <button type="button" class="btn" id="select-image-btn"><i class="fas fa-image"></i> 写真を選択</button>
+                        </div>
+                        <div class="image-preview" id="image-preview">
+                            <img id="preview-img" src="" alt="プレビュー">
+                            <button type="button" class="btn btn-reset" id="remove-image-btn" style="margin-top: 10px;"><i class="fas fa-trash"></i> 写真を削除</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> 点検記録を保存</button>
+                        <button type="reset" class="btn btn-reset"><i class="fas fa-redo"></i> フォームをリセット</button>
                     </div>
                 </form>
             </section>
             
             <section class="records-section">
-                <h2 class="section-title"><i class="fas fa-history"></i>点检历史记录</h2>
+                <h2 class="section-title"><i class="fas fa-history"></i> 点検履歴</h2>
                 
                 <div class="filter-section">
-                    <input type="text" id="search-vehicle" placeholder="搜索车辆...">
+                    <input type="text" id="search-items" placeholder="点検項目で検索...">
                     <select id="filter-type">
-                        <option value="">所有类型</option>
-                        <option value="日常检查">日常检查</option>
-                        <option value="定期保养">定期保养</option>
-                        <option value="更换机油">更换机油</option>
-                        <option value="轮胎检查">轮胎检查</option>
-                        <option value="刹车检查">刹车检查</option>
-                        <option value="其他">其他</option>
+                        <option value="">すべての種類</option>
+                        <option value="日常点検">日常点検</option>
+                        <option value="定期点検">定期点検</option>
+                        <option value="オイル交換">オイル交換</option>
+                        <option value="タイヤ交換">タイヤ交換</option>
+                        <option value="ブレーキ点検">ブレーキ点検</option>
+                        <option value="その他">その他</option>
                     </select>
                 </div>
                 
@@ -411,30 +654,36 @@
                     <table id="records-table">
                         <thead>
                             <tr>
-                                <th>日期</th>
-                                <th>车辆</th>
-                                <th>类型</th>
-                                <th>公里数</th>
-                                <th>项目</th>
+                                <th>日付</th>
+                                <th>走行距離</th>
+                                <th>種類</th>
+                                <th>点検項目</th>
+                                <th>写真</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody id="records-body">
-                            <!-- 记录将通过JavaScript动态添加 -->
+                            <!-- 記録はJavaScriptで動的に追加されます -->
                         </tbody>
                     </table>
                     <div id="empty-state" class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
-                        <h3>暂无点检记录</h3>
-                        <p>请添加您的第一条点检记录</p>
+                        <h3>点検記録がありません</h3>
+                        <p>最初の点検記録を追加してください</p>
                     </div>
                 </div>
             </section>
         </div>
         
         <footer>
-            <p>我的车辆点检记录 &copy; 2023 - 轻松管理，安全驾驶</p>
+            <p>マイカー点検記録 &copy; 2023 - 簡単管理、安全運転</p>
         </footer>
+    </div>
+
+    <!-- 画像拡大表示モーダル -->
+    <div class="modal" id="image-modal">
+        <span class="close-modal" id="close-modal">&times;</span>
+        <img class="modal-content" id="modal-image">
     </div>
 
     <script>
@@ -443,17 +692,128 @@
             const form = document.getElementById('inspection-form');
             const recordsBody = document.getElementById('records-body');
             const emptyState = document.getElementById('empty-state');
-            const searchVehicle = document.getElementById('search-vehicle');
+            const searchItems = document.getElementById('search-items');
             const filterType = document.getElementById('filter-type');
             const totalRecords = document.getElementById('total-records');
             const lastMileage = document.getElementById('last-mileage');
             const nextService = document.getElementById('next-service');
+            const saveVehicleInfoBtn = document.getElementById('save-vehicle-info');
+            const imageUpload = document.getElementById('image-upload');
+            const selectImageBtn = document.getElementById('select-image-btn');
+            const imageUploadArea = document.getElementById('image-upload-area');
+            const imagePreview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            const removeImageBtn = document.getElementById('remove-image-btn');
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const closeModal = document.getElementById('close-modal');
+            
+            let currentImageData = null;
             
             // 设置默认日期为今天
             document.getElementById('date').valueAsDate = new Date();
             
+            // 加载保存的车辆信息
+            loadVehicleInfo();
+            
             // 加载保存的记录
             loadRecords();
+            
+            // 保存车辆信息
+            saveVehicleInfoBtn.addEventListener('click', function() {
+                const carModel = document.getElementById('car-model').value;
+                const carYear = document.getElementById('car-year').value;
+                const tireSizeFront = document.getElementById('tire-size-front').value;
+                const tireSizeRear = document.getElementById('tire-size-rear').value;
+                const engineOil = document.getElementById('engine-oil').value;
+                const brakeFluid = document.getElementById('brake-fluid').value;
+                const gearOil = document.getElementById('gear-oil').value;
+                const clutchFluid = document.getElementById('clutch-fluid').value;
+                
+                const vehicleInfo = {
+                    carModel,
+                    carYear,
+                    tireSizeFront,
+                    tireSizeRear,
+                    engineOil,
+                    brakeFluid,
+                    gearOil,
+                    clutchFluid
+                };
+                
+                localStorage.setItem('vehicleInfo', JSON.stringify(vehicleInfo));
+                alert('車両情報が保存されました！');
+            });
+            
+            // 图片上传处理
+            selectImageBtn.addEventListener('click', function() {
+                imageUpload.click();
+            });
+            
+            imageUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                imageUploadArea.style.background = '#e8f4fd';
+            });
+            
+            imageUploadArea.addEventListener('dragleave', function() {
+                imageUploadArea.style.background = '#f8fafc';
+            });
+            
+            imageUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                imageUploadArea.style.background = '#f8fafc';
+                
+                if (e.dataTransfer.files.length) {
+                    handleImageFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            imageUpload.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    handleImageFile(this.files[0]);
+                }
+            });
+            
+            function handleImageFile(file) {
+                // 检查文件类型
+                if (!file.type.match('image.*')) {
+                    alert('画像ファイルを選択してください。');
+                    return;
+                }
+                
+                // 检查文件大小 (限制为5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('画像サイズは5MB以下にしてください。');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    currentImageData = e.target.result;
+                    previewImg.src = currentImageData;
+                    imagePreview.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            removeImageBtn.addEventListener('click', function() {
+                currentImageData = null;
+                imagePreview.style.display = 'none';
+                imageUpload.value = '';
+            });
+            
+            // 图片模态框处理
+            closeModal.addEventListener('click', function() {
+                imageModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === imageModal) {
+                    imageModal.style.display = 'none';
+                }
+            });
             
             // 表单提交事件
             form.addEventListener('submit', function(e) {
@@ -461,7 +821,6 @@
                 
                 // 获取表单数据
                 const date = document.getElementById('date').value;
-                const vehicle = document.getElementById('vehicle').value;
                 const mileage = document.getElementById('mileage').value;
                 const type = document.getElementById('type').value;
                 const items = document.getElementById('items').value;
@@ -471,11 +830,11 @@
                 const record = {
                     id: Date.now(), // 使用时间戳作为唯一ID
                     date,
-                    vehicle,
                     mileage,
                     type,
                     items,
-                    notes
+                    notes,
+                    image: currentImageData
                 };
                 
                 // 保存记录
@@ -487,13 +846,15 @@
                 // 重置表单
                 form.reset();
                 document.getElementById('date').valueAsDate = new Date();
+                currentImageData = null;
+                imagePreview.style.display = 'none';
                 
                 // 显示成功消息
-                alert('点检记录已保存！');
+                alert('点検記録が保存されました！');
             });
             
             // 搜索和过滤事件
-            searchVehicle.addEventListener('input', loadRecords);
+            searchItems.addEventListener('input', loadRecords);
             filterType.addEventListener('change', loadRecords);
             
             // 保存记录到本地存储
@@ -505,14 +866,14 @@
             
             // 从本地存储加载记录
             function loadRecords() {
-                const searchTerm = searchVehicle.value.toLowerCase();
+                const searchTerm = searchItems.value.toLowerCase();
                 const typeFilter = filterType.value;
                 
                 let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
                 
                 // 应用过滤
                 records = records.filter(record => {
-                    const matchesSearch = record.vehicle.toLowerCase().includes(searchTerm);
+                    const matchesSearch = record.items.toLowerCase().includes(searchTerm);
                     const matchesType = !typeFilter || record.type === typeFilter;
                     
                     return matchesSearch && matchesType;
@@ -539,18 +900,53 @@
                         
                         row.innerHTML = `
                             <td>${formatDate(record.date)}</td>
-                            <td>${record.vehicle}</td>
+                            <td class="mileage">${record.mileage} km</td>
                             <td>${record.type}</td>
-                            <td class="mileage">${record.mileage} 公里</td>
                             <td>${record.items}</td>
+                            <td>
+                                ${record.image ? 
+                                    `<img src="${record.image}" class="thumbnail" alt="点検写真" onclick="showImage('${record.image}')">` : 
+                                    '<span style="color: #7f8c8d;">なし</span>'
+                                }
+                            </td>
                             <td class="actions">
-                                <button class="btn-edit" onclick="viewRecord(${record.id})"><i class="fas fa-eye"></i> 查看</button>
-                                <button class="btn-delete" onclick="deleteRecord(${record.id})"><i class="fas fa-trash"></i> 删除</button>
+                                <button class="btn-edit" onclick="viewRecord(${record.id})"><i class="fas fa-eye"></i> 詳細</button>
+                                <button class="btn-delete" onclick="deleteRecord(${record.id})"><i class="fas fa-trash"></i> 削除</button>
                             </td>
                         `;
                         
                         recordsBody.appendChild(row);
                     });
+                }
+            }
+            
+            // 加载车辆信息
+            function loadVehicleInfo() {
+                const vehicleInfo = JSON.parse(localStorage.getItem('vehicleInfo')) || {};
+                
+                if (vehicleInfo.carModel) {
+                    document.getElementById('car-model').value = vehicleInfo.carModel;
+                }
+                if (vehicleInfo.carYear) {
+                    document.getElementById('car-year').value = vehicleInfo.carYear;
+                }
+                if (vehicleInfo.tireSizeFront) {
+                    document.getElementById('tire-size-front').value = vehicleInfo.tireSizeFront;
+                }
+                if (vehicleInfo.tireSizeRear) {
+                    document.getElementById('tire-size-rear').value = vehicleInfo.tireSizeRear;
+                }
+                if (vehicleInfo.engineOil) {
+                    document.getElementById('engine-oil').value = vehicleInfo.engineOil;
+                }
+                if (vehicleInfo.brakeFluid) {
+                    document.getElementById('brake-fluid').value = vehicleInfo.brakeFluid;
+                }
+                if (vehicleInfo.gearOil) {
+                    document.getElementById('gear-oil').value = vehicleInfo.gearOil;
+                }
+                if (vehicleInfo.clutchFluid) {
+                    document.getElementById('clutch-fluid').value = vehicleInfo.clutchFluid;
                 }
             }
             
@@ -562,15 +958,15 @@
                 // 最新公里数
                 if (records.length > 0) {
                     const latestRecord = records.reduce((prev, current) => {
-                        return (prev.mileage > current.mileage) ? prev : current;
+                        return (parseInt(prev.mileage) > parseInt(current.mileage)) ? prev : current;
                     });
-                    lastMileage.textContent = latestRecord.mileage + ' 公里';
+                    lastMileage.textContent = latestRecord.mileage + ' km';
                     
                     // 下次保养提醒（假设每5000公里需要保养）
                     const nextServiceKm = parseInt(latestRecord.mileage) + 5000;
-                    nextService.textContent = nextServiceKm + ' 公里';
+                    nextService.textContent = nextServiceKm + ' km';
                 } else {
-                    lastMileage.textContent = '0 公里';
+                    lastMileage.textContent = '0 km';
                     nextService.textContent = '-';
                 }
             }
@@ -578,7 +974,7 @@
             // 格式化日期显示
             function formatDate(dateString) {
                 const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                return new Date(dateString).toLocaleDateString('zh-CN', options);
+                return new Date(dateString).toLocaleDateString('ja-JP', options);
             }
             
             // 查看记录详情
@@ -587,21 +983,30 @@
                 const record = records.find(r => r.id === id);
                 
                 if (record) {
-                    alert(
-                        `点检详情:\n\n` +
-                        `日期: ${formatDate(record.date)}\n` +
-                        `车辆: ${record.vehicle}\n` +
-                        `公里数: ${record.mileage} 公里\n` +
-                        `类型: ${record.type}\n` +
-                        `项目: ${record.items}\n` +
-                        `备注: ${record.notes || '无'}`
-                    );
+                    let message = `点検詳細:\n\n` +
+                        `日付: ${formatDate(record.date)}\n` +
+                        `走行距離: ${record.mileage} km\n` +
+                        `種類: ${record.type}\n` +
+                        `項目: ${record.items}\n` +
+                        `備考: ${record.notes || 'なし'}`;
+                    
+                    if (record.image) {
+                        message += `\n\n※写真あり - 一覧で写真をクリックして拡大表示`;
+                    }
+                    
+                    alert(message);
                 }
+            };
+            
+            // 显示大图
+            window.showImage = function(imageData) {
+                modalImage.src = imageData;
+                imageModal.style.display = 'flex';
             };
             
             // 删除记录
             window.deleteRecord = function(id) {
-                if (confirm('确定要删除这条点检记录吗？')) {
+                if (confirm('この点検記録を削除してもよろしいですか？')) {
                     let records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
                     records = records.filter(record => record.id !== id);
                     localStorage.setItem('vehicleRecords', JSON.stringify(records));
